@@ -203,8 +203,7 @@ evaluates to:
   ([specs {:keys [delete-old-schemas?             ; If false, does not delete old schema files before creating new.
                   output-path                     ; Defines the output folder for generated schema files.
                   additional-props?               ; If false, adds adds additionalProperties field with false value to schema.
-                  convert-name?                   ; If false, keeps spec name as file name, otherwise converts it
-                                                  ; to [Pascal Case](https://en.wikipedia.org/wiki/Camel_case)
+                  convert-name?                   ; If false, keeps spec name as file name, otherwise converts it to PascalCase
                   pretty?]                        ; If false, skips prettifying JSON string.
            :or   {delete-old-schemas? true
                   output-path         "schemas"
@@ -240,6 +239,8 @@ evaluates to:
 
 Reference to [additionalProperties](http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.5.6)
 can be found in the link.
+
+Reference to [Pascal Case](https://en.wikipedia.org/wiki/Camel_case) can be found in the link.
 
 ## License
 
