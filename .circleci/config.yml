@@ -37,19 +37,6 @@ jobs:
           name: test
           command: lein test
 
-  deploy:
-    docker:
-      - image: circleci/clojure:lein-2.7.1
-    working_directory: ~/json-schema
-    steps:
-      - attach_workspace:
-          at: ~/json-schema
-      - restore_cache:
-          key: lein-json-schema-{{ checksum "project.clj" }}
-      - run:
-          name: deploy to clojars
-          command: lein deploy clojars
-
 workflows:
   version: 2
   deploy:
@@ -58,10 +45,3 @@ workflows:
       - test:
           requires:
             - prepare
-      - deploy:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
