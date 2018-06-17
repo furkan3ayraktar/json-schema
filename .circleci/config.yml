@@ -1,0 +1,67 @@
+version: 2.0
+
+jobs:
+  prepare:
+    docker:
+      - image: circleci/clojure:lein-2.7.1
+    working_directory: ~/json-schema
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/json-schema
+      - restore_cache:
+          key: lein-json-schema-{{ checksum "project.clj" }}
+      - run:
+          name: install into local repo
+          command: lein install
+      - save_cache:
+          key: lein-json-schema-{{ checksum "project.clj" }}
+          paths:
+            - ~/.m2
+            - ~/.lein
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: circleci/clojure:lein-2.7.1
+    working_directory: ~/json-schema
+    steps:
+      - attach_workspace:
+          at: ~/json-schema
+      - restore_cache:
+          key: lein-json-schema-{{ checksum "project.clj" }}
+      - run:
+          name: test
+          command: lein test
+
+  deploy:
+    docker:
+      - image: circleci/clojure:lein-2.7.1
+    working_directory: ~/json-schema
+    steps:
+      - attach_workspace:
+          at: ~/json-schema
+      - restore_cache:
+          key: lein-json-schema-{{ checksum "project.clj" }}
+      - run:
+          name: deploy to clojars
+          command: lein deploy clojars
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - prepare
+      - test:
+          requires:
+            - prepare
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
